@@ -237,13 +237,16 @@ public class SessionService implements ISessionService {
 		if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Object p = auth.getPrincipal();
-		  if (sessionHolder.containsKey(p)) {
-			  Map<String, Object> r = new HashMap<>();
-			  r.putAll(sessionHolder.get(p));
-			  r.remove("password");
-			  return r;
-		  }
-
+			if (!sessionHolder.containsKey(p)) {
+				log.debug("Creating Session for Basic Authorization");
+				createSession(auth, "","");
+			}
+			if (sessionHolder.containsKey(p)) {
+				Map<String, Object> r = new HashMap<>();
+				r.putAll(sessionHolder.get(p));
+				r.remove("password");
+				return r;
+			}
 		}
 		return new HashMap<>();
 	}
