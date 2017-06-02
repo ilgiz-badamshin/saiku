@@ -61,6 +61,11 @@
     </context-param>
 	<session-config>
 		<session-timeout>60</session-timeout>
+        <cookie-config>
+            <!-- Saiku use cookie path parameter to store JsessionID like "/saiku",
+            but engine use different path to saiku-ui, so override it to be "/" -->
+            <path>/</path>
+        </cookie-config>
 	</session-config>
 
     <!-- BEGIN - Hazelcast Filter -->
