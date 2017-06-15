@@ -256,7 +256,7 @@ var DateFilterModal = Modal.extend({
 		var left = ($(window).width() - 600) / 2,
 			width = $(window).width() < 600 ? $(window).width() : 600;
 		$(args.modal.el).parents('.ui-dialog')
-			.css({ width: width, left: 'inherit', margin: '0', height: 490 })
+			.css({ width: width, left: 'inherit', margin: '0', height: 500 })
 			.offset({ left: left});
 	},
 

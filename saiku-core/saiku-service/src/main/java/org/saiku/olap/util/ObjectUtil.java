@@ -141,45 +141,27 @@ public class ObjectUtil {
   private static SaikuLevel convert(@NotNull Level level) {
     Checker c= new Checker();
     try {
-      try {
-        Class.forName("mondrian.olap4j.MondrianOlap4jLevelExtend");
-        //Class.forName("bi.meteorite.CheckClass");
-        Class<LevelInterface> _tempClass =
-            (Class<LevelInterface>) Class.forName("mondrian.olap4j.MondrianOlap4jLevelExtend");
-        if(c.checker(level)){
-          Constructor<LevelInterface> ctor = _tempClass.getDeclaredConstructor(org.olap4j.metadata.Level.class);
-          LevelInterface test = ctor.newInstance(level);
-          HashMap<String, String> m = null;
-          if (test.getAnnotations() != null) {
-            m = new HashMap<>();
-            for (Map.Entry<String, Annotation> entry : test.getAnnotations().entrySet()) {
-              m.put(entry.getKey(), (String) entry.getValue().getValue());
-            }
+      if(c.checker(level)){
+        Map<String, Annotation> annotations = SaikuMondrianHelper.getAnnotations(level);
+        HashMap<String, String> m = null;
+        if (annotations != null) {
+          m = new HashMap<>();
+          for (Map.Entry<String, Annotation> entry : annotations.entrySet()) {
+            m.put(entry.getKey(), (String) entry.getValue().getValue());
           }
-          return new SaikuLevel(
-              test.getName(),
-              test.getUniqueName(),
-              test.getCaption(),
-              test.getDescription(),
-              test.getDimension().getUniqueName(),
-              test.getHierarchy().getUniqueName(),
-              test.isVisible(),
-              test.getLevelType().toString(),
-              m);
         }
-        else{
-          return new SaikuLevel(
-              level.getName(),
-              level.getUniqueName(),
-              level.getCaption(),
-              level.getDescription(),
-              level.getDimension().getUniqueName(),
-              level.getHierarchy().getUniqueName(),
-              level.isVisible(),
-              null,null);
-        }
+        return new SaikuLevel(
+            level.getName(),
+            level.getUniqueName(),
+            level.getCaption(),
+            level.getDescription(),
+            level.getDimension().getUniqueName(),
+            level.getHierarchy().getUniqueName(),
+            level.isVisible(),
+            level.getLevelType().toString(),
+            m);
       }
-      catch(ClassNotFoundException e){
+      else{
         return new SaikuLevel(
             level.getName(),
             level.getUniqueName(),
@@ -190,7 +172,6 @@ public class ObjectUtil {
             level.isVisible(),
             null,null);
       }
-
     } catch (Exception e) {
       throw new SaikuServiceException("Cannot convert level: " + level, e);
     }
